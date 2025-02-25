@@ -1,0 +1,28 @@
+const essences = [
+    'Essence of Battle',
+    'Essence of Electricity',
+    'Essence of Enhancement',
+    'Essence of Flames',
+    'Essence of Haste',
+    'Essence of Ice',
+    'Essence of Ruin',
+    'Essence of Sorcery',
+    'Essence of the Body',
+    'Essence of the Infinite',
+    'Essence of the Mind',
+    'Essence of Torment',
+    'Greater Essence of Battle',
+    'Greater Essence of Electricity',
+    'Greater Essence of Enhancement',
+    'Greater Essence of Flames',
+    'Greater Essence of Haste',
+    'Greater Essence of Ice',
+    'Greater Essence of Ruin',
+    'Greater Essence of Sorcery',
+    'Greater Essence of the Body',
+    'Greater Essence of the Infinite',
+    'Greater Essence of the Mind',
+    'Greater Essence of Torment',
+];
+
+export default essences;
