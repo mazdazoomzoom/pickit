@@ -1,5 +1,6 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+
 import StashItem from '@/components/stash_item';
 import Waystones from '@/components/waystones';
 import Pickit from '@/data/pickit';
@@ -8,14 +9,14 @@ export default async function Home() {
     const pickit = new Pickit();
 
     return (
-        <div>
-            <h1 className="">Pickit Creator</h1>
-            <p>Generate a pickit file for Exiled Bot 2.</p>
+        <div className="container mx-auto p-4 max-w-3xl">
+            <h1 className="text-3xl font-bold mb-4">Path of Exile 2 Pickit Configuration</h1>
+            <p className="text-gray-600 mb-6">
+                Customize your item pickup script by configuring the items below. Use the accordions to organize
+                different item categories.
+            </p>
 
-            <h2>Configuration</h2>
-            <p>Here you can configure which items your bot should pick up, identify, keep, or salvage.</p>
-
-            <div className="container mx-auto border border-gray-800 p-4 rounded-lg">
+            <div className="container mx-auto border border-gray-800 p-4 rounded-lg mb-4">
                 <Accordion type="single" collapsible>
                     <AccordionItem value="currency">
                         <AccordionTrigger>
@@ -135,6 +136,10 @@ export default async function Home() {
                     </AccordionItem>
                 </Accordion>
             </div>
+
+            <Button type="submit" className="w-full">
+                Create Pickit File
+            </Button>
         </div>
     );
 }
