@@ -12,7 +12,50 @@ import trialKeys from './trial_keys';
 import trials from './trials';
 import tablets from './tablets';
 
-function objProps(category) {
+const RARITIES = ['Normal', 'Magic', 'Rare', 'Unique'];
+
+function salvageObjProps() {
+    const salvageProps = {
+        sockets: [
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Normal',
+            },
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Magic',
+            },
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Rare',
+            },
+        ],
+        quality: [
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Normal',
+            },
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Magic',
+            },
+            {
+                greaterThan: 0,
+                salvage: true,
+                rarity: 'Rare',
+            },
+        ],
+    };
+
+    return salvageProps;
+}
+
+function stashItemsObjProps(category) {
     return category.map((prop) => {
         return {
             name: prop,
@@ -22,15 +65,14 @@ function objProps(category) {
 }
 
 function waystoneObjProps() {
-    const rarities = ['Normal', 'Magic', 'Rare', 'Unique'];
     const waystoneProps = [];
 
     Array.from({ length: 15 }, (_, i) => {
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < RARITIES.length; k++) {
             waystoneProps.push({
                 name: `Waystone (Tier ${i + 1})`,
                 stashItem: true,
-                rarity: rarities[k],
+                rarity: RARITIES[k],
             });
         }
     });
@@ -44,19 +86,20 @@ function createBasePickitData() {
         pickit[category.prop] = [];
     });
 
-    pickit.currency = objProps(currency);
-    pickit.runes = objProps(runes);
-    pickit.distilledEmotions = objProps(distilledEmotions);
-    pickit.soulCores = objProps(soulCores);
-    pickit.omens = objProps(omens);
-    pickit.essences = objProps(essences);
-    pickit.catalysts = objProps(catalysts);
-    pickit.splinters = objProps(splinters);
-    pickit.artifacts = objProps(artifacts);
-    pickit.trialKeys = objProps(trialKeys);
-    pickit.trials = objProps(trials);
+    pickit.salvage = salvageObjProps();
+    pickit.currency = stashItemsObjProps(currency);
+    pickit.runes = stashItemsObjProps(runes);
+    pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
+    pickit.soulCores = stashItemsObjProps(soulCores);
+    pickit.omens = stashItemsObjProps(omens);
+    pickit.essences = stashItemsObjProps(essences);
+    pickit.catalysts = stashItemsObjProps(catalysts);
+    pickit.splinters = stashItemsObjProps(splinters);
+    pickit.artifacts = stashItemsObjProps(artifacts);
+    pickit.trialKeys = stashItemsObjProps(trialKeys);
+    pickit.trials = stashItemsObjProps(trials);
     pickit.waystones = waystoneObjProps();
-    pickit.tablets = objProps(tablets);
+    pickit.tablets = stashItemsObjProps(tablets);
 
     return pickit;
 }
@@ -73,10 +116,66 @@ function generateIPD(pickitData) {
         return `//${' '.repeat(center)}${category}${' '.repeat(center)}//`;
     };
 
+    const salvagePickit = () => {
+        return `
+${pickitData.salvage.sockets
+    .map((data) => {
+        return `[Rarity] == "${data.rarity}" && [Sockets] > "${data.greaterThan}" # [Salvage] == "${
+            data.salvage ? 'true' : 'false'
+        }"`;
+    })
+    .join('\n')}
+                    
+${pickitData.salvage.quality
+    .map((data) => {
+        return `[Rarity] == "${data.rarity}" && [Quality] > "${data.greaterThan}" # [Salvage] == "${
+            data.salvage ? 'true' : 'false'
+        }"`;
+    })
+    .join('\n')}`;
+    };
+
+    const waystonePickit = () => {
+        // Every 4 waystones, add a new line
+
+        return pickitData.waystones
+            .map((data, index) => {
+                return `[Type] == "${data.name}" && [Rarity] == "${data.rarity}" # [StashItem] == "${
+                    data.stashItem ? 'true' : 'false'
+                }"${(index + 1) % 4 === 0 ? '\n' : ''}`;
+            })
+            .join('\n');
+    };
+
+    const stashItemPickit = (category) => {
+        return pickitData[category]
+            .map((data) => {
+                return `[Type] == "${data.name}" # [StashItem] == "${data.stashItem ? 'true' : 'false'}"`;
+            })
+            .join('\n');
+    };
+
+    const categoryProps = (category) => {
+        switch (category) {
+            case 'salvage':
+                return salvagePickit();
+                break;
+
+            case 'waystones':
+                return waystonePickit();
+                break;
+
+            default:
+                return stashItemPickit(category);
+                break;
+        }
+    };
+
     let ipd = `//
 // Exiled Bot 2 Pickit - Configuration Guide for Path of Exile 2
 //
-// This file defines which items your bot should pick up, identify, keep, or salvage.`;
+// This file defines which items your bot should pick up, identify, keep, or salvage.
+// `;
 
     categories.map((category) => {
         ipd += `
@@ -84,22 +183,14 @@ function generateIPD(pickitData) {
 //                                                                                 //
 ${centerCategory(category.name)}
 //                                                                                 //
-/////////////////////////////////////////////////////////////////////////////////////`;
+/////////////////////////////////////////////////////////////////////////////////////
+
+${categoryProps(category.prop)}
+
+`;
     });
 
     return ipd;
 }
 
-export default class Pickit {
-    constructor() {
-        this.data = createBasePickitData();
-    }
-
-    getPickit() {
-        return this.data;
-    }
-
-    generatePicket() {
-        return generateIPD(this.data);
-    }
-}
+export { createBasePickitData, generateIPD };

@@ -1,145 +1,86 @@
+'use client';
+
+import { useState } from 'react';
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
 
-import StashItem from '@/components/stash_item';
-import Waystones from '@/components/waystones';
-import Pickit from '@/data/pickit';
+import StashItem from '@/components/StashItem';
+import Waystones from '@/components/Waystones';
+import Salvage from '@/components/Salvage';
+import { createBasePickitData, generateIPD } from '@/data/pickit';
+import categories from '@/data/pickit/categories';
 
-export default async function Home() {
-    const pickit = new Pickit();
+export default function Home() {
+    const [pickit, setPickit] = useState(createBasePickitData());
+
+    // Update the pickit data with the new item
+    const updatePickit = (category, item) => {
+        const newPickit = { ...pickit };
+
+        switch (category) {
+            case 'salvage':
+                newPickit.salvage = item;
+                break;
+            default:
+                const categoryIndex = newPickit[category].findIndex((i) => i.name === item.name);
+
+                if (categoryIndex === -1) {
+                    newPickit[category].push(item);
+                } else {
+                    newPickit[category][categoryIndex] = item;
+                }
+                break;
+        }
+
+        setPickit(newPickit);
+    };
 
     return (
-        <div className="container mx-auto p-4 max-w-3xl">
+        <div className="mx-auto p-4">
             <h1 className="text-3xl font-bold mb-4">Path of Exile 2 Pickit Configuration</h1>
-            <p className="text-gray-600 mb-6">
+            <p className=" mb-6">
                 Customize your item pickup script by configuring the items below. Use the accordions to organize
                 different item categories.
             </p>
 
-            <div className="container mx-auto border border-gray-800 p-4 rounded-lg mb-4">
-                <Accordion type="single" collapsible>
-                    <AccordionItem value="currency">
-                        <AccordionTrigger>
-                            <h1>Currency</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.currency} />
-                        </AccordionContent>
-                    </AccordionItem>
+            <div className="flex flex-col lg:flex-row">
+                <div className="w-full lg:w-1/2 lg:mr-4">
+                    <Accordion type="single" collapsible>
+                        {RenderAccordions(pickit, updatePickit)}
+                    </Accordion>
+                </div>
 
-                    <AccordionItem value="runes">
-                        <AccordionTrigger>
-                            <h1>Runes</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.runes} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="distilledEmotions">
-                        <AccordionTrigger>
-                            <h1>Distilled Emotions</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.distilledEmotions} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="soulCores">
-                        <AccordionTrigger>
-                            <h1>Soul Cores</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.soulCores} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="omens">
-                        <AccordionTrigger>
-                            <h1>Omens</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.omens} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="essences">
-                        <AccordionTrigger>
-                            <h1>Essences</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.essences} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="catalysts">
-                        <AccordionTrigger>
-                            <h1>Catalysts</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.catalysts} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="splinters">
-                        <AccordionTrigger>
-                            <h1>Splinters</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.splinters} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="artifacts">
-                        <AccordionTrigger>
-                            <h1>Artifacts</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.artifacts} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="trialKeys">
-                        <AccordionTrigger>
-                            <h1>Trial Keys</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.trialKeys} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="trials">
-                        <AccordionTrigger>
-                            <h1>Trials</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.trials} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="waystones">
-                        <AccordionTrigger>
-                            <h1>Waystones</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <Waystones data={pickit.data.waystones} />
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="tablets">
-                        <AccordionTrigger>
-                            <h1>Tablets</h1>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            <StashItem data={pickit.data.tablets} />
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
+                <div className="w-full lg:w-1/2">
+                    <pre className="mt-4 p-4 bg-secondary text-primary rounded-lg">{generateIPD(pickit)}</pre>
+                </div>
             </div>
-
-            <Button type="submit" className="w-full">
-                Create Pickit File
-            </Button>
         </div>
     );
+}
+
+function RenderAccordions(pickit, updatePickit) {
+    const component = (category) => {
+        switch (category.component) {
+            case 'stash_item':
+                return <StashItem updatePickit={updatePickit} category={category.prop} data={pickit[category.prop]} />;
+            case 'waystones':
+                return <Waystones updatePickit={updatePickit} category={category.prop} data={pickit.waystones} />;
+            case 'salvage':
+                return <Salvage updatePickit={updatePickit} category={category.prop} data={pickit.salvage} />;
+
+            default:
+                return null;
+        }
+    };
+
+    return categories.map((category) => {
+        return (
+            <AccordionItem value={category.prop} key={category.prop}>
+                <AccordionTrigger>
+                    <h1>{category.name}</h1>
+                </AccordionTrigger>
+                <AccordionContent>{component(category)}</AccordionContent>
+            </AccordionItem>
+        );
+    });
 }
