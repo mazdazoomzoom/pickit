@@ -7,7 +7,7 @@ const categories = [
     {
         name: 'Equipment',
         prop: 'equipment',
-        component: 'stash_item',
+        component: 'equipment',
     },
     {
         name: 'Weapons',

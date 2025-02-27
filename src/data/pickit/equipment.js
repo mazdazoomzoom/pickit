@@ -1,3 +1,3 @@
-const equipment = ['BodyArmour', 'Gloves', 'Boots', 'Belt', 'Helmet', 'Ring', 'Amulet'];
+const equipment = ['Armour', 'Belt', 'Boots', 'Gloves', 'Helmet'];
 
 export default equipment;

@@ -9,6 +9,7 @@ import Waystones from '@/components/Waystones';
 import Salvage from '@/components/Salvage';
 import { createBasePickitData, generateIPD } from '@/data/pickit';
 import categories from '@/data/pickit/categories';
+import Equipment from '@/components/Equipment';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
@@ -19,8 +20,10 @@ export default function Home() {
 
         switch (category) {
             case 'salvage':
-                newPickit.salvage = item;
+            case 'equipment':
+                newPickit[category] = item;
                 break;
+
             default:
                 const categoryIndex = newPickit[category].findIndex((i) => i.name === item.name);
 
@@ -67,6 +70,8 @@ function RenderAccordions(pickit, updatePickit) {
                 return <Waystones updatePickit={updatePickit} category={category.prop} data={pickit.waystones} />;
             case 'salvage':
                 return <Salvage updatePickit={updatePickit} category={category.prop} data={pickit.salvage} />;
+            case 'equipment':
+                return <Equipment updatePickit={updatePickit} category={category.prop} data={pickit.equipment} />;
 
             default:
                 return null;

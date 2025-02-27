@@ -11,8 +11,8 @@ import artifacts from './artifacts';
 import trialKeys from './trial_keys';
 import trials from './trials';
 import tablets from './tablets';
-
-const RARITIES = ['Normal', 'Magic', 'Rare', 'Unique'];
+import equipment from './equipment';
+import rarities from './rarities';
 
 function salvageObjProps() {
     const salvageProps = {
@@ -68,16 +68,26 @@ function waystoneObjProps() {
     const waystoneProps = [];
 
     Array.from({ length: 15 }, (_, i) => {
-        for (let k = 0; k < RARITIES.length; k++) {
+        for (let k = 0; k < rarities.length; k++) {
             waystoneProps.push({
                 name: `Waystone (Tier ${i + 1})`,
                 stashItem: true,
-                rarity: RARITIES[k],
+                rarity: rarities[k],
             });
         }
     });
 
     return waystoneProps;
+}
+
+function equipmentObjProps() {
+    const equipmentProps = {};
+
+    equipment.map((prop) => {
+        equipmentProps[prop] = [];
+    });
+
+    return equipmentProps;
 }
 
 function createBasePickitData() {
@@ -87,6 +97,8 @@ function createBasePickitData() {
     });
 
     pickit.salvage = salvageObjProps();
+    pickit.waystones = waystoneObjProps();
+    pickit.equipment = equipmentObjProps();
     pickit.currency = stashItemsObjProps(currency);
     pickit.runes = stashItemsObjProps(runes);
     pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
@@ -98,7 +110,6 @@ function createBasePickitData() {
     pickit.artifacts = stashItemsObjProps(artifacts);
     pickit.trialKeys = stashItemsObjProps(trialKeys);
     pickit.trials = stashItemsObjProps(trials);
-    pickit.waystones = waystoneObjProps();
     pickit.tablets = stashItemsObjProps(tablets);
 
     return pickit;
@@ -147,6 +158,8 @@ ${pickitData.salvage.quality
             .join('\n');
     };
 
+    const equipmentPickit = () => {};
+
     const stashItemPickit = (category) => {
         return pickitData[category]
             .map((data) => {
@@ -163,6 +176,10 @@ ${pickitData.salvage.quality
 
             case 'waystones':
                 return waystonePickit();
+                break;
+
+            case 'equipment':
+                return equipmentPickit();
                 break;
 
             default:
