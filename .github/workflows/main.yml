@@ -1,0 +1,15 @@
+name: Hourly API Update
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows manual execution
+
+jobs:
+  trigger-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make API Request
+        run: |
+          curl -X POST https://pickit-create.vercel.app/api/update-uniques \
+          -H "Authorization: Bearer ${{ secrets.API_SECRET_KEY }}"
