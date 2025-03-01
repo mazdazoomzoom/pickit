@@ -65,16 +65,6 @@ const categories = [
         component: 'stash_item',
     },
     {
-        name: 'Rings',
-        prop: 'rings',
-        component: 'stash_item',
-    },
-    {
-        name: 'Amulets',
-        prop: 'amulets',
-        component: 'stash_item',
-    },
-    {
         name: 'Jewels',
         prop: 'jewels',
         component: 'stash_item',
@@ -97,12 +87,12 @@ const categories = [
     {
         name: 'Charms',
         prop: 'charms',
-        component: 'stash_item',
+        component: 'charms',
     },
     {
-        name: 'Flask',
+        name: 'Flasks',
         prop: 'flask',
-        component: 'stash_item',
+        component: 'flasks',
     },
     {
         name: 'Gems',

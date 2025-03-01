@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
     Accordion,
     AccordionContent,
@@ -11,16 +12,21 @@ import { Textarea } from '@/components/ui/textarea';
 import StashItem from '@/components/StashItem';
 import Waystones from '@/components/Waystones';
 import Salvage from '@/components/Salvage';
-import { createBasePickitData, generateIPD } from '@/data/pickit';
-import categories from '@/data/pickit/categories';
 import Equipment from '@/components/Equipment';
 import Weapons from '@/components/Weapons';
-import { decrypt } from '@/helpers/crypto';
-import { useState } from 'react';
+import Flasks from '@/components/Flasks';
+import Charms from '@/components/Charms';
+
 import PickitButtons from '@/components/PickitButtons';
+
+import { createBasePickitData, generateIPD } from '@/data/pickit';
+import categories from '@/data/pickit/categories';
+import { decrypt } from '@/helpers/crypto';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
+
+    console.log('Pickit', pickit);
 
     const updatePickit = (category, item) => {
         const newPickit = { ...pickit };
@@ -29,6 +35,8 @@ export default function Home() {
             case 'salvage':
             case 'equipment':
             case 'weapons':
+            case 'flasks':
+            case 'charms':
                 newPickit[category] = item;
                 break;
 
@@ -140,6 +148,26 @@ function RenderAccordions(pickit, updatePickit) {
                         updatePickit={updatePickit}
                         category={category.prop}
                         data={pickit.weapons}
+                    />
+                );
+                break;
+
+            case 'flasks':
+                return (
+                    <Flasks
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.flasks}
+                    />
+                );
+                break;
+
+            case 'charms':
+                return (
+                    <Charms
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.charms}
                     />
                 );
                 break;

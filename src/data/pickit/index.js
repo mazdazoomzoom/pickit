@@ -16,6 +16,7 @@ import tablets from './tablets';
 import equipment from './equipment';
 import weapons from './weapons';
 import rarities from './rarities';
+import charms from './charms';
 import { encrypt } from '@/helpers/crypto';
 
 function salvageObjProps() {
@@ -108,6 +109,25 @@ function weaponObjProps() {
     return weaponProps;
 }
 
+function flaskObjProps() {
+    const flaskProps = {
+        'Life Flask': [],
+        'Mana Flask': [],
+    };
+
+    return flaskProps;
+}
+
+function charmsObjProps() {
+    const charmsProps = {};
+
+    charms.map((prop) => {
+        charmsProps[prop + ' Charm'] = [];
+    });
+
+    return charmsProps;
+}
+
 function createBasePickitData() {
     const pickit = {};
     categories.map((category) => {
@@ -118,6 +138,8 @@ function createBasePickitData() {
     pickit.waystones = waystoneObjProps();
     pickit.equipment = equipmentObjProps();
     pickit.weapons = weaponObjProps();
+    pickit.flasks = flaskObjProps();
+    pickit.charms = charmsObjProps();
     pickit.currency = stashItemsObjProps(currency);
     pickit.runes = stashItemsObjProps(runes);
     pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
@@ -299,6 +321,73 @@ function generateIPD(pickitData) {
             .join('\n');
     };
 
+    const flaskPickit = () => {
+        const flasks = pickitData.flasks;
+        let ipdFlask = '';
+
+        for (const key in flasks) {
+            let category = key;
+
+            if (key === 'Life Flask') {
+                category = 'LifeFlask';
+            }
+
+            if (key === 'Mana Flask') {
+                category = 'ManaFlask';
+            }
+
+            if (flasks[key].length === 0) continue;
+            ipdFlask += `//// ${key} ////\n`;
+
+            for (const flaskItem of flasks[key]) {
+                ipdFlask += `[Category] == "${category}" && [Rarity] == "${flaskItem.rarity}" # `;
+
+                if (flaskItem.properties.length > 0) {
+                    ipdFlask += flaskItem.properties
+                        .map((prop) => {
+                            return `[${prop.property}] ${prop.operators} "${prop.value}"`;
+                        })
+                        .join(' && ');
+                    ipdFlask += ' && ';
+                }
+                ipdFlask += `[StashItem] == "true"\n`;
+            }
+            ipdFlask += `\n`;
+        }
+
+        return ipdFlask;
+    };
+
+    const charmsPickit = () => {
+        const charms = pickitData.charms;
+        let ipdCharms = '';
+
+        for (const key in charms) {
+            let category = key;
+            // category = category.replace(/\s/g, '');
+
+            if (charms[key].length === 0) continue;
+            ipdCharms += `//// ${key} ////\n`;
+
+            for (const equipmentItem of charms[key]) {
+                ipdCharms += `[Type] == "${category}" && [Rarity] == "${equipmentItem.rarity}" # `;
+
+                if (equipmentItem.properties.length > 0) {
+                    ipdCharms += equipmentItem.properties
+                        .map((prop) => {
+                            return `[${prop.property}] ${prop.operators} "${prop.value}"`;
+                        })
+                        .join(' && ');
+                    ipdCharms += ' && ';
+                }
+                ipdCharms += `[StashItem] == "true"\n`;
+            }
+            ipdCharms += `\n`;
+        }
+
+        return ipdCharms;
+    };
+
     const categoryProps = (category) => {
         switch (category) {
             case 'salvage':
@@ -315,6 +404,13 @@ function generateIPD(pickitData) {
 
             case 'weapons':
                 return weaponPickit();
+                break;
+
+            case 'flask':
+                return flaskPickit();
+                break;
+            case 'charms':
+                return charmsPickit();
                 break;
 
             default:
