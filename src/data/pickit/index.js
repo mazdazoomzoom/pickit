@@ -191,16 +191,30 @@ function generateIPD(pickitData) {
             } ////\n`;
 
             for (const data of pickitData.salvage[key]) {
-                ipdSalvage += `[Rarity] == "${data.rarity}" && [${
-                    key.charAt(0).toUpperCase() + key.slice(1)
-                }] > "${data.greaterThan}" # [Salvage] == "${
-                    data.salvage ? 'true' : 'false'
-                }"\n`;
+                if (data.socket && data.salvage) {
+                    ipdSalvage += `[${key}] > "${data.greaterThan}" # [Salvage] == "true"\n`;
+                }
+
+                if (data.rarity && data.salvage) {
+                    ipdSalvage += `[${key}] > "${data.greaterThan}" && [Rarity] == "${data.rarity}" # [Salvage] == "true"\n`;
+                }
             }
             ipdSalvage += `\n`;
         }
 
         return ipdSalvage;
+    };
+
+    const stashItemPickit = (category) => {
+        let ipdStashItem = '';
+
+        for (const stashItem of pickitData[category]) {
+            if (stashItem.stashItem) {
+                ipdStashItem += `[Type] == "${stashItem.name}" # [StashItem] == "true"\n`;
+            }
+        }
+
+        return ipdStashItem;
     };
 
     const waystonePickit = () => {
@@ -414,16 +428,6 @@ function generateIPD(pickitData) {
         }
 
         return ipdJewels;
-    };
-
-    const stashItemPickit = (category) => {
-        return pickitData[category]
-            .map((data) => {
-                return `${data.stashItem ? '' : '// '}[Type] == "${
-                    data.name
-                }" # [StashItem] == "true"`;
-            })
-            .join('\n');
     };
 
     const categoryProps = (category) => {
