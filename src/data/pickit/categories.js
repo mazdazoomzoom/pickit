@@ -12,7 +12,7 @@ const categories = [
     {
         name: 'Weapons',
         prop: 'weapons',
-        component: 'stash_item',
+        component: 'weapons',
     },
     {
         name: 'Currency',

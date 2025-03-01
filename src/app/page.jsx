@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@/components/ui/accordion';
 
 import StashItem from '@/components/StashItem';
 import Waystones from '@/components/Waystones';
@@ -10,9 +15,12 @@ import Salvage from '@/components/Salvage';
 import { createBasePickitData, generateIPD } from '@/data/pickit';
 import categories from '@/data/pickit/categories';
 import Equipment from '@/components/Equipment';
+import Weapons from '@/components/Weapons';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
+
+    // console.log('Pickit', pickit);
 
     // Update the pickit data with the new item
     const updatePickit = (category, item) => {
@@ -21,11 +29,14 @@ export default function Home() {
         switch (category) {
             case 'salvage':
             case 'equipment':
+            case 'weapons':
                 newPickit[category] = item;
                 break;
 
             default:
-                const categoryIndex = newPickit[category].findIndex((i) => i.name === item.name);
+                const categoryIndex = newPickit[category].findIndex(
+                    (i) => i.name === item.name
+                );
 
                 if (categoryIndex === -1) {
                     newPickit[category].push(item);
@@ -40,10 +51,9 @@ export default function Home() {
 
     return (
         <div className="mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">Path of Exile 2 Pickit Configuration</h1>
             <p className=" mb-6">
-                Customize your item pickup script by configuring the items below. Use the accordions to organize
-                different item categories.
+                Customize your item pickup script by configuring the items
+                below. Use the accordions to organize different item categories.
             </p>
 
             <div className="flex flex-col lg:flex-row">
@@ -54,7 +64,9 @@ export default function Home() {
                 </div>
 
                 <div className="w-full lg:w-1/2">
-                    <pre className="mt-4 p-4 bg-secondary text-primary rounded-lg">{generateIPD(pickit)}</pre>
+                    <pre className="mt-4 p-4 bg-secondary text-primary rounded-lg">
+                        {generateIPD(pickit)}
+                    </pre>
                 </div>
             </div>
         </div>
@@ -65,13 +77,50 @@ function RenderAccordions(pickit, updatePickit) {
     const component = (category) => {
         switch (category.component) {
             case 'stash_item':
-                return <StashItem updatePickit={updatePickit} category={category.prop} data={pickit[category.prop]} />;
+                return (
+                    <StashItem
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit[category.prop]}
+                    />
+                );
+                break;
             case 'waystones':
-                return <Waystones updatePickit={updatePickit} category={category.prop} data={pickit.waystones} />;
+                return (
+                    <Waystones
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.waystones}
+                    />
+                );
+                break;
             case 'salvage':
-                return <Salvage updatePickit={updatePickit} category={category.prop} data={pickit.salvage} />;
+                return (
+                    <Salvage
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.salvage}
+                    />
+                );
+                break;
             case 'equipment':
-                return <Equipment updatePickit={updatePickit} category={category.prop} data={pickit.equipment} />;
+                return (
+                    <Equipment
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.equipment}
+                    />
+                );
+                break;
+            case 'weapons':
+                return (
+                    <Weapons
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.weapons}
+                    />
+                );
+                break;
 
             default:
                 return null;

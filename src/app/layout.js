@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { ModeToggle } from '@/components/ModeToggle';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -20,8 +21,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <div className="flex justify-between border-b-2 border-primary p-4 ">
+                        <h1 className="text-3xl">
+                            Path of Exile 2 Pickit Configuration
+                        </h1>
+                        <ModeToggle className="justify-end" />
+                    </div>
                     {children}
                 </ThemeProvider>
             </body>
