@@ -11,7 +11,16 @@ export default function PickitButtons({ pickit }) {
                     navigator.clipboard.writeText(encrypt(pickit));
                 }}
             >
-                Copy Pickit Code
+                Copy Pickit Unique Code
+            </Button>
+
+            <Button
+                className="btn btn-primary"
+                onClick={() => {
+                    navigator.clipboard.writeText(generateIPD(pickit));
+                }}
+            >
+                Copy Pickit
             </Button>
 
             <Button
