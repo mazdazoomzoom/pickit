@@ -322,16 +322,6 @@ function generateIPD(pickitData) {
         return ipdWeapons;
     };
 
-    const stashItemPickit = (category) => {
-        return pickitData[category]
-            .map((data) => {
-                return `[Type] == "${data.name}" # [StashItem] == "${
-                    data.stashItem ? 'true' : 'false'
-                }"`;
-            })
-            .join('\n');
-    };
-
     const flaskPickit = () => {
         const flasks = pickitData.flasks;
         let ipdFlask = '';
@@ -424,6 +414,16 @@ function generateIPD(pickitData) {
         }
 
         return ipdJewels;
+    };
+
+    const stashItemPickit = (category) => {
+        return pickitData[category]
+            .map((data) => {
+                return `${data.stashItem ? '' : '// '}[Type] == "${
+                    data.name
+                }" # [StashItem] == "true"`;
+            })
+            .join('\n');
     };
 
     const categoryProps = (category) => {
