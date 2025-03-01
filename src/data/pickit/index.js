@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import categories from './categories';
 import currency from './currency';
 import runes from './runes';
@@ -17,6 +15,8 @@ import equipment from './equipment';
 import weapons from './weapons';
 import rarities from './rarities';
 import charms from './charms';
+import jewels from './jewels';
+
 import { encrypt } from '@/helpers/crypto';
 
 function salvageObjProps() {
@@ -128,6 +128,16 @@ function charmsObjProps() {
     return charmsProps;
 }
 
+function jewelsObjProps() {
+    const jewelsProps = {};
+
+    jewels.map((prop) => {
+        jewelsProps[prop] = [];
+    });
+
+    return jewelsProps;
+}
+
 function createBasePickitData() {
     const pickit = {};
     categories.map((category) => {
@@ -140,6 +150,7 @@ function createBasePickitData() {
     pickit.weapons = weaponObjProps();
     pickit.flasks = flaskObjProps();
     pickit.charms = charmsObjProps();
+    pickit.jewels = jewelsObjProps();
     pickit.currency = stashItemsObjProps(currency);
     pickit.runes = stashItemsObjProps(runes);
     pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
@@ -388,6 +399,33 @@ function generateIPD(pickitData) {
         return ipdCharms;
     };
 
+    const jewelsPickit = () => {
+        const jewels = pickitData.jewels;
+        let ipdJewels = '';
+
+        for (const key in jewels) {
+            if (jewels[key].length === 0) continue;
+            ipdJewels += `//// ${key} ////\n`;
+
+            for (const equipmentItem of jewels[key]) {
+                ipdJewels += `[Type] == "${key}" && [Rarity] == "${equipmentItem.rarity}" # `;
+
+                if (equipmentItem.properties.length > 0) {
+                    ipdJewels += equipmentItem.properties
+                        .map((prop) => {
+                            return `[${prop.property}] ${prop.operators} "${prop.value}"`;
+                        })
+                        .join(' && ');
+                    ipdJewels += ' && ';
+                }
+                ipdJewels += `[StashItem] == "true"\n`;
+            }
+            ipdJewels += `\n`;
+        }
+
+        return ipdJewels;
+    };
+
     const categoryProps = (category) => {
         switch (category) {
             case 'salvage':
@@ -411,6 +449,9 @@ function generateIPD(pickitData) {
                 break;
             case 'charms':
                 return charmsPickit();
+                break;
+            case 'jewels':
+                return jewelsPickit();
                 break;
 
             default:
