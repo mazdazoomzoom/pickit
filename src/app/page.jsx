@@ -17,6 +17,7 @@ import Weapons from '@/components/Weapons';
 import Flasks from '@/components/Flasks';
 import Charms from '@/components/Charms';
 import Jewels from '@/components/Jewels';
+import Gems from '@/components/Gems';
 
 import PickitButtons from '@/components/PickitButtons';
 
@@ -37,6 +38,7 @@ export default function Home() {
             case 'flasks':
             case 'charms':
             case 'jewels':
+            case 'gems':
                 newPickit[category] = item;
                 break;
 
@@ -52,6 +54,8 @@ export default function Home() {
                 }
                 break;
         }
+
+        console.log('Updated pickit', newPickit);
 
         setPickit(newPickit);
     };
@@ -178,6 +182,15 @@ function RenderAccordions(pickit, updatePickit) {
                         updatePickit={updatePickit}
                         category={category.prop}
                         data={pickit.jewels}
+                    />
+                );
+
+            case 'gems':
+                return (
+                    <Gems
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.gems}
                     />
                 );
 

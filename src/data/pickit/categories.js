@@ -97,7 +97,7 @@ const categories = [
     {
         name: 'Gems',
         prop: 'gems',
-        component: 'stash_item',
+        component: 'gems',
     },
     {
         name: 'Trials',

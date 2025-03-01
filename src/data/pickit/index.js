@@ -16,6 +16,7 @@ import weapons from './weapons';
 import rarities from './rarities';
 import charms from './charms';
 import jewels from './jewels';
+import gems from './gemTypes';
 
 import { encrypt } from '@/helpers/crypto';
 
@@ -151,6 +152,7 @@ function createBasePickitData() {
     pickit.flasks = flaskObjProps();
     pickit.charms = charmsObjProps();
     pickit.jewels = jewelsObjProps();
+    pickit.gems = [];
     pickit.currency = stashItemsObjProps(currency);
     pickit.runes = stashItemsObjProps(runes);
     pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
@@ -430,6 +432,17 @@ function generateIPD(pickitData) {
         return ipdJewels;
     };
 
+    const gemsPickit = () => {
+        const gems = pickitData.gems;
+        let ipdGems = '';
+
+        for (const gem of gems) {
+            ipdGems += `[Type] == "${gem.gemType}" && [GemLevel] ${gem.operators} ${gem.value} # [StashItem] == "true"\n`;
+        }
+
+        return ipdGems;
+    };
+
     const categoryProps = (category) => {
         switch (category) {
             case 'salvage':
@@ -456,6 +469,9 @@ function generateIPD(pickitData) {
                 break;
             case 'jewels':
                 return jewelsPickit();
+                break;
+            case 'gems':
+                return gemsPickit();
                 break;
 
             default:
