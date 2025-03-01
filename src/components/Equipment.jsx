@@ -6,8 +6,6 @@ export default function Equipment({ updatePickit, category, data }) {
         updatePickit(category, data);
     }
 
-    console.log('Equipment', data);
-
     return (
         <div className="overflow-hidden border bg-secondary p-3 rounded-lg">
             {Object.keys(data).map((equipmentItem) => {

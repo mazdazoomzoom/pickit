@@ -17,7 +17,6 @@ export default function CreateStashItemType({
     stashItem,
     updateStashItem,
 }) {
-    console.log(stashItem);
     return (
         <div className="border border-primary mt-2 rounded-md p-2">
             <h2 className="text-lg font-bold">{itemDescription}</h2>

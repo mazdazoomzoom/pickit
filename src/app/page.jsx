@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Textarea } from '@/components/ui/textarea';
 
 import StashItem from '@/components/StashItem';
 import Waystones from '@/components/Waystones';
@@ -16,13 +15,12 @@ import { createBasePickitData, generateIPD } from '@/data/pickit';
 import categories from '@/data/pickit/categories';
 import Equipment from '@/components/Equipment';
 import Weapons from '@/components/Weapons';
+import { decrypt } from '@/helpers/crypto';
+import { useState } from 'react';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
 
-    // console.log('Pickit', pickit);
-
-    // Update the pickit data with the new item
     const updatePickit = (category, item) => {
         const newPickit = { ...pickit };
 
@@ -55,6 +53,22 @@ export default function Home() {
                 Customize your item pickup script by configuring the items
                 below. Use the accordions to organize different item categories.
             </p>
+
+            <div className="mb-6">
+                <Textarea
+                    placeholder="Paste your pickit here"
+                    onChange={(e) => {
+                        try {
+                            const newPickit = JSON.parse(
+                                decrypt(e.target.value)
+                            );
+                            setPickit(newPickit);
+                        } catch (error) {
+                            console.log('Invalid pickit');
+                        }
+                    }}
+                />
+            </div>
 
             <div className="flex flex-col lg:flex-row">
                 <div className="w-full lg:w-1/2 lg:mr-4">

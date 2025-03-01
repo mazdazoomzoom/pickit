@@ -16,6 +16,7 @@ import tablets from './tablets';
 import equipment from './equipment';
 import weapons from './weapons';
 import rarities from './rarities';
+import { encrypt } from '@/helpers/crypto';
 
 function salvageObjProps() {
     const salvageProps = {
@@ -108,7 +109,7 @@ function weaponObjProps() {
 }
 
 function createBasePickitData() {
-    const pickit = { id: uuidv4() };
+    const pickit = {};
     categories.map((category) => {
         pickit[category.prop] = [];
     });
@@ -326,7 +327,12 @@ function generateIPD(pickitData) {
 // Exiled Bot 2 Pickit - Configuration Guide for Path of Exile 2
 //
 // This file defines which items your bot should pick up, identify, keep, or salvage.
-// `;
+//
+// You can comeback and edit your pickit file at any time by visiting the following link and entering your unique pickit code.
+// https://pickit-create.vercel.app/
+// ${encrypt(pickitData)}
+// 
+//  `;
 
     categories.map((category) => {
         ipd += `
