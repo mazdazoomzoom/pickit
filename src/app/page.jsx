@@ -17,6 +17,7 @@ import Equipment from '@/components/Equipment';
 import Weapons from '@/components/Weapons';
 import { decrypt } from '@/helpers/crypto';
 import { useState } from 'react';
+import PickitButtons from '@/components/PickitButtons';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
@@ -70,6 +71,10 @@ export default function Home() {
                 />
             </div>
 
+            <div className="lg:hidden flex gap-4 mb-4">
+                <PickitButtons pickit={pickit} />
+            </div>
+
             <div className="flex flex-col lg:flex-row">
                 <div className="w-full lg:w-1/2 lg:mr-4">
                     <Accordion type="single" collapsible>
@@ -78,6 +83,9 @@ export default function Home() {
                 </div>
 
                 <div className="w-full lg:w-1/2">
+                    <div className="sm:hidden lg:flex gap-4 mb-4">
+                        <PickitButtons pickit={pickit} />
+                    </div>
                     <pre className="mt-4 p-4 bg-secondary text-primary rounded-lg">
                         {generateIPD(pickit)}
                     </pre>
