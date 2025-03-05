@@ -4,8 +4,8 @@ const equipment = [
     'Boots',
     'Gloves',
     'Helmet',
-    'Rings',
-    'Amulets',
+    'Ring',
+    'Amulet',
 ];
 
 export default equipment;
