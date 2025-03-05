@@ -82,7 +82,7 @@ const categories = [
     {
         name: 'Uniques',
         prop: 'uniques',
-        component: 'stash_item',
+        component: 'uniques',
     },
     {
         name: 'Charms',

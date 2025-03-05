@@ -33,11 +33,6 @@ function salvageObjProps() {
                 salvage: true,
                 rarity: 'Magic',
             },
-            {
-                greaterThan: 0,
-                salvage: true,
-                rarity: 'Rare',
-            },
         ],
         quality: [
             {
@@ -49,11 +44,6 @@ function salvageObjProps() {
                 greaterThan: 0,
                 salvage: true,
                 rarity: 'Magic',
-            },
-            {
-                greaterThan: 0,
-                salvage: true,
-                rarity: 'Rare',
             },
         ],
     };
@@ -153,6 +143,7 @@ function createBasePickitData() {
     pickit.charms = charmsObjProps();
     pickit.jewels = jewelsObjProps();
     pickit.gems = [];
+    pickit.uniques = [];
     pickit.currency = stashItemsObjProps(currency);
     pickit.runes = stashItemsObjProps(runes);
     pickit.distilledEmotions = stashItemsObjProps(distilledEmotions);
@@ -437,7 +428,7 @@ function generateIPD(pickitData) {
         let ipdGems = '';
 
         for (const gem of gems) {
-            ipdGems += `[Type] == "${gem.gemType}" && [GemLevel] ${gem.operators} ${gem.value} # [StashItem] == "true"\n`;
+            ipdGems += `[Type] == "${gem.gemType}" && [GemLevel] ${gem.operators} "${gem.value}" # [StashItem] == "true"\n`;
         }
 
         return ipdGems;

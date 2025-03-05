@@ -18,12 +18,14 @@ import Flasks from '@/components/Flasks';
 import Charms from '@/components/Charms';
 import Jewels from '@/components/Jewels';
 import Gems from '@/components/Gems';
+import Uniques from '@/components/Uniques';
 
 import PickitButtons from '@/components/PickitButtons';
 
 import { createBasePickitData, generateIPD } from '@/data/pickit';
 import categories from '@/data/pickit/categories';
 import { decrypt } from '@/helpers/crypto';
+import uniques from '@/data/pickit/uniques';
 
 export default function Home() {
     const [pickit, setPickit] = useState(createBasePickitData());
@@ -54,8 +56,6 @@ export default function Home() {
                 }
                 break;
         }
-
-        console.log('Updated pickit', newPickit);
 
         setPickit(newPickit);
     };
@@ -118,7 +118,7 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit[category.prop]}
                     />
                 );
-                break;
+
             case 'waystones':
                 return (
                     <Waystones
@@ -127,7 +127,7 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.waystones}
                     />
                 );
-                break;
+
             case 'salvage':
                 return (
                     <Salvage
@@ -136,7 +136,7 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.salvage}
                     />
                 );
-                break;
+
             case 'equipment':
                 return (
                     <Equipment
@@ -145,7 +145,7 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.equipment}
                     />
                 );
-                break;
+
             case 'weapons':
                 return (
                     <Weapons
@@ -154,7 +154,6 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.weapons}
                     />
                 );
-                break;
 
             case 'flasks':
                 return (
@@ -164,7 +163,6 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.flasks}
                     />
                 );
-                break;
 
             case 'charms':
                 return (
@@ -174,7 +172,6 @@ function RenderAccordions(pickit, updatePickit) {
                         data={pickit.charms}
                     />
                 );
-                break;
 
             case 'jewels':
                 return (
@@ -191,6 +188,15 @@ function RenderAccordions(pickit, updatePickit) {
                         updatePickit={updatePickit}
                         category={category.prop}
                         data={pickit.gems}
+                    />
+                );
+
+            case 'uniques':
+                return (
+                    <Uniques
+                        updatePickit={updatePickit}
+                        category={category.prop}
+                        data={pickit.uniques}
                     />
                 );
 
